@@ -1,3 +1,5 @@
+from __future__ import print_function 
+
 import argparse
 import os
 import unicodecsv
@@ -75,7 +77,7 @@ def get_random_utterances_from_corpus(candidate_dialog_paths,rng,utterances_num=
     utterances = []
     dialogs_num = len(candidate_dialog_paths)
 
-    for i in xrange(0,utterances_num):
+    for i in range(0,utterances_num):
         # sample random dialog
         dialog_path = candidate_dialog_paths[rng.randint(0,dialogs_num-1)]
         # load the dialog
@@ -84,7 +86,7 @@ def get_random_utterances_from_corpus(candidate_dialog_paths,rng,utterances_num=
         # we do not count the last  _dialog_end__ urn
         dialog_len = len(dialog) - 1
         if(dialog_len<min_turn):
-            print "Dialog {} was shorter than the minimum required lenght {}".format(dialog_path,dialog_len)
+            print("Dialog {} was shorter than the minimum required lenght {}".format(dialog_path, dialog_len))
             exit()
         # sample utterance, exclude the last round that is always "dialog end"
         max_ix = min(max_turn, dialog_len) - 1
@@ -200,7 +202,7 @@ def create_examples_train(candidate_dialog_paths, rng, positive_probability=0.5,
     examples = []
     for context_dialog in candidate_dialog_paths:
         if i % 1000 == 0:
-            print str(i)
+            print(str(i))
         dialog_path = candidate_dialog_paths[i]
         examples.append(create_single_dialog_train_example(dialog_path, candidate_dialog_paths, rng, positive_probability,
                                                            max_context_length=max_context_length))
@@ -222,7 +224,7 @@ def create_examples(candidate_dialog_paths, examples_num, creator_function):
         context_dialog = candidate_dialog_paths[i % unique_dialogs_num]
         # counter for tracking progress
         if i % 1000 == 0:
-            print str(i)
+            print(str(i))
         i+=1
 
         examples.append(creator_function(context_dialog, candidate_dialog_paths))
@@ -258,7 +260,7 @@ def prepare_data_maybe_download(directory):
         # archive missing, download it
         print("Downloading %s to %s" % (url, archive_path))
         filepath, _ = urllib.request.urlretrieve(url, archive_path)
-        print "Successfully downloaded " + filepath
+        print("Successfully downloaded", filepath)
 
     # unpack data
     if not os.path.exists(dialogs_path):
@@ -290,7 +292,7 @@ if __name__ == '__main__':
         w = unicodecsv.writer(open(args.output, 'w'), encoding='utf-8')
         # header
         header = ["Context", "Ground Truth Utterance"]
-        header.extend(map(lambda x: "Distractor_{}".format(x), xrange(args.n)))
+        header.extend(map(lambda x: "Distractor_{}".format(x), range(args.n)))
         w.writerow(header)
 
         stemmer = SnowballStemmer("english")

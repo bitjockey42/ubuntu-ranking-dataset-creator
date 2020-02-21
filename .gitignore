@@ -66,3 +66,4 @@ src/*.csv
 src/*.tgz
 dialogs/
 .idea/
+.vscode/
